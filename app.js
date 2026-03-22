@@ -158,11 +158,18 @@ document.addEventListener('DOMContentLoaded', function() {
     });
   });
 
-  // Start router
+  // Start router only after login
   window.addEventListener('hashchange', handleRoute);
 
-  // Navigate to last route or dashboard
+  // If already authenticated, start now
+  if (window._beeAuthenticated) {
+    _startRouter();
+  }
+  // Otherwise, login script will call _startRouter() after success
+});
+
+function _startRouter() {
   var startRoute = window.location.hash.replace('#', '') || load('lastRoute', 'dashboard');
   if (!window.location.hash) window.location.hash = startRoute;
   else handleRoute();
-});
+}

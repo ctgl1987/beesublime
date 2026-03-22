@@ -369,6 +369,8 @@ body.dark .login-box .brand{color:#a78bfa}
   if (stored === hashPass(LOGIN_PASS)) {
     loginScreen.classList.add('hidden');
     appContainer.style.display = '';
+    window._beeAuthenticated = true;
+    if (typeof _startRouter === 'function') _startRouter();
   }
 
   loginForm.addEventListener('submit', function(e) {
@@ -380,8 +382,9 @@ body.dark .login-box .brand{color:#a78bfa}
       }
       loginScreen.classList.add('hidden');
       appContainer.style.display = '';
-      // Trigger route after app becomes visible
-      setTimeout(function() { window.dispatchEvent(new Event('hashchange')); }, 100);
+      window._beeAuthenticated = true;
+      // Start router after login
+      setTimeout(function() { _startRouter(); }, 100);
     } else {
       loginError.textContent = 'Contraseña incorrecta';
       loginPass.value = '';

@@ -1,0 +1,401 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1" name="viewport"/>
+<title>BeeSublime</title>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;800&display=swap" rel="stylesheet"/>
+<link rel="manifest" href="manifest.json"/>
+<meta name="theme-color" content="#312664"/>
+<meta name="apple-mobile-web-app-capable" content="yes"/>
+<meta name="apple-mobile-web-app-title" content="BeeSublime"/>
+<link href="icons/icon-180.png" rel="apple-touch-icon"/>
+<style>
+/* ══════════════════════════════════════════════
+   BeeSublime — Design System
+   ══════════════════════════════════════════════ */
+:root{
+  --bg:#f7f7fb;--card:#fff;--ink:#111827;--muted:#6b7280;
+  --brand:#ff7aa2;--brand2:#312664;--ok:#22c55e;--danger:#ef4444;
+  --accent:#2563eb;--accent-contrast:#fff;
+  --radius:16px;--card-border:#e5e7eb;
+  --input-bg:#fff;--input-border:#e5e7eb;
+  --pill-bg:#f3f4f6;--pill-text:#111827;
+  --line:#e2e8f0;--shadow:0 10px 25px rgba(0,0,0,.06);
+}
+body.dark{
+  --bg:#0f1115;--card:#151924;--ink:#e5e7eb;--muted:#9fb0c6;
+  --card-border:#23283a;--input-bg:#0f1115;--input-border:#2a3147;
+  --pill-bg:#1b2030;--pill-text:#e5e7eb;--shadow:none;--line:#23283a;
+}
+
+/* Reset */
+*,*::before,*::after{box-sizing:border-box}
+html,body{margin:0;padding:0;background:var(--bg);color:var(--ink);
+  font-family:Poppins,system-ui,-apple-system,'Segoe UI',Roboto,sans-serif;line-height:1.4;-webkit-font-smoothing:antialiased}
+html{scroll-behavior:smooth}
+
+/* App shell */
+.app{max-width:1200px;margin:auto;padding:18px}
+h1,h2,h3,h4{margin:0 0 10px}
+
+/* Header */
+.app-header{
+  position:sticky;top:0;z-index:950;
+  background:var(--brand2);color:#fff;
+  padding:14px 18px;border-radius:var(--radius);
+  box-shadow:0 10px 25px rgba(0,0,0,.10);
+  display:flex;align-items:center;gap:14px;flex-wrap:wrap;justify-content:space-between;
+  transition:padding .2s,box-shadow .2s;
+}
+.app-header h1{margin:0;font-size:20px;white-space:nowrap}
+.app-header.compact{padding:8px 14px;box-shadow:0 6px 14px rgba(0,0,0,.08)}
+@media(max-width:840px){.app-header.compact .header-right{display:none!important}.app-header.compact h1{font-size:16px!important}}
+
+/* Header buttons */
+.header-right{display:flex;gap:8px;align-items:center}
+.hdr-btn{appearance:none;border:none;background:#ffffff22;color:#fff;border-radius:10px;padding:8px 12px;font-weight:600;cursor:pointer;font-family:inherit;font-size:13px;transition:.15s}
+.hdr-btn:hover{background:#ffffff44}
+
+/* Rate badge in header */
+.rate-badge{display:inline-flex;align-items:center;gap:6px;background:#ffffff33;border-radius:999px;padding:4px 10px;font-size:12px;font-weight:600;cursor:pointer}
+.rate-badge:hover{background:#ffffff55}
+
+/* Grid */
+.grid{display:grid;grid-template-columns:repeat(12,1fr);gap:14px}
+@media(min-width:900px){.md-3{grid-column:span 3}.md-4{grid-column:span 4}.md-6{grid-column:span 6}.md-8{grid-column:span 8}.md-12{grid-column:span 12}}
+
+/* Cards */
+.card{grid-column:span 12;background:var(--card);border-radius:var(--radius);border:1px solid var(--card-border);box-shadow:var(--shadow);padding:16px;overflow:hidden}
+
+/* Forms */
+label{font-size:12px;color:var(--muted);display:block;margin:6px 0 4px}
+input[type="number"],input[type="text"],select,textarea{
+  width:100%;padding:12px;border-radius:12px;border:1px solid var(--input-border);
+  background:var(--input-bg);color:var(--ink);font-size:14px;font-family:inherit;
+  transition:border-color .15s,box-shadow .15s}
+input:focus,select:focus,textarea:focus{outline:none;box-shadow:0 0 0 3px rgba(49,38,100,.2);border-color:#8b7abf}
+
+/* Buttons */
+.btn{appearance:none;border:none;border-radius:12px;padding:10px 14px;font-weight:600;cursor:pointer;font-family:inherit;font-size:14px;transition:filter .15s,transform .06s}
+.btn:hover{filter:brightness(1.05)}.btn:active{transform:scale(.98)}
+.btn.ok{background:var(--ok);color:#fff}
+.btn.reset{background:var(--danger);color:#fff}
+.btn.neutral{background:#111;color:#fff}
+.btn.accent{background:var(--accent);color:var(--accent-contrast)}
+.btn.ghost{background:transparent;color:var(--ink);border:1px solid var(--card-border)}
+body.dark .btn.neutral{background:#e5e7eb;color:#0f1115}
+
+/* Pills & Badges */
+.pill{display:inline-flex;align-items:center;gap:6px;background:var(--pill-bg);color:var(--pill-text);border-radius:999px;padding:6px 10px;font-size:12px}
+.badge{display:inline-flex;align-items:center;gap:6px;background:var(--card);border:1px solid var(--card-border);border-radius:999px;padding:6px 10px;font-size:12px}
+
+/* Utilities */
+.row{display:flex;gap:8px;flex-wrap:wrap;align-items:flex-start}
+.sep{height:1px;background:var(--line);margin:12px 0}
+.tot{font-size:18px;font-weight:700}.muted{color:var(--muted)}.result{font-weight:600}.right{text-align:right}
+.center-actions{display:flex;gap:12px;justify-content:center;margin-top:12px;flex-wrap:wrap}
+.ud{background:#ffe8ee!important;font-weight:600}
+body.dark .ud{background:#5e3c49!important;color:#fff}
+.mono{font-variant-numeric:tabular-nums}
+.chk-label{font-weight:700}
+.copy-btn{font-size:12px;border:none;background:var(--pill-bg);color:var(--pill-text);border-radius:8px;padding:6px 8px;cursor:pointer}
+.copy-btn:hover{background:var(--brand);color:#fff}
+
+/* Toast */
+.toast{position:fixed;right:12px;bottom:12px;background:#111827;color:#fff;padding:10px 14px;border-radius:12px;box-shadow:0 10px 30px rgba(2,6,23,.2);font-size:13px;opacity:0;transform:translateY(8px);transition:all .25s ease;z-index:9999;pointer-events:none}
+.toast.show{opacity:1;transform:translateY(0)}
+
+/* Tables */
+table{width:100%;border-collapse:collapse;background:var(--card)}
+th,td{border-bottom:1px solid var(--line);padding:8px;font-size:13px;text-align:left}
+th{color:var(--muted);position:sticky;top:0;background:var(--card)}
+tbody tr:nth-child(odd){background:rgba(0,0,0,.015)}
+body.dark tbody tr:nth-child(odd){background:rgba(255,255,255,.02)}
+tfoot td{font-weight:800;font-size:16px}
+
+/* Pill Toggle */
+.pillToggle{display:flex;border:1px solid var(--line);border-radius:999px;overflow:hidden}
+.pillToggle button{background:var(--card);border:0;border-right:1px solid var(--line);border-radius:0;padding:8px 12px;font-weight:600;cursor:pointer;font-family:inherit}
+.pillToggle button:last-child{border-right:0}
+.pillToggle button.active{background:var(--brand);color:#fff}
+
+/* Details/Summary (Cotizador) */
+details>summary{cursor:pointer;list-style:none}
+details>summary::-webkit-details-marker{display:none}
+.summaryBar{display:flex;justify-content:space-between;align-items:center;padding:8px 12px;border:1px solid var(--line);border-radius:12px;background:var(--card)}
+.toolbar{display:flex;gap:8px;flex-wrap:wrap}
+.toolbar.sticky{position:sticky;top:8px;background:var(--card);padding:8px;border:1px solid var(--line);border-radius:12px;z-index:5}
+.hide-cost th:nth-child(4),.hide-cost td:nth-child(4){display:none}
+
+/* WhatsApp btn */
+.btn-wa{background:#ff4fa3!important;color:#fff!important;border-radius:10px!important;padding:10px 14px!important;font-weight:600!important;box-shadow:0 6px 14px rgba(255,79,163,.25)!important}
+.btn-wa:hover{filter:brightness(1.05)!important}
+
+/* Animations */
+.rate-updated{animation:ratePulse .65s ease}
+@keyframes ratePulse{0%{box-shadow:0 0 0 0 rgba(255,122,162,.35)}100%{box-shadow:0 0 0 10px rgba(255,122,162,0)}}
+
+/* Vinil specific */
+#bloques{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:14px}
+.color-preview{width:14px;height:14px;border-radius:4px;border:1px solid var(--card-border);display:inline-block;vertical-align:middle;margin-right:6px}
+/* Costos indirectos */
+.indA-card .row>div{min-width:140px}.indA-card input[type="text"],.indA-card input[type="number"]{max-width:220px;border-radius:14px;padding:10px}
+.indA-pill{background:#eef6ff}.indA-ud{background:#eaf7ef;font-weight:600}.indA-small{max-width:120px}
+
+/* ══════════════════════════════════════════════
+   Drawer
+   ══════════════════════════════════════════════ */
+.burger{width:42px;height:42px;border-radius:12px;background:#ffffff22;display:grid;place-items:center;border:1px solid #ffffff3a;cursor:pointer;transition:.2s;-webkit-tap-highlight-color:transparent}
+.burger:active{transform:scale(.96)}
+.burger svg{width:22px;height:22px;stroke:#fff;fill:none;stroke-width:2;stroke-linecap:round}
+.overlay{position:fixed;inset:0;background:rgba(15,17,21,.45);opacity:0;pointer-events:none;transition:opacity .25s ease;z-index:999}
+.overlay.open{opacity:1;pointer-events:auto}
+.drawer{position:fixed;inset:0 auto 0 0;width:min(86vw,340px);background:var(--card);transform:translateX(-105%);transition:transform .28s ease;box-shadow:0 10px 40px rgba(0,0,0,.2);border-radius:0 18px 18px 0;display:flex;flex-direction:column;z-index:1000;height:100vh;max-height:100vh;overflow:hidden}
+.drawer.open{transform:translateX(0)}
+body.dark .drawer{background:#151924;border-right:1px solid #23283a}
+.drawer-header{display:flex;align-items:center;justify-content:center;gap:10px;padding:20px 16px;border-bottom:1px solid var(--line)}
+.drawer-header .brand-dot{width:10px;height:10px;border-radius:50%;background:#312664;box-shadow:14px 0 0 0 #5b3d9e}
+.drawer-header .brand-name{font-weight:800;font-size:18px;text-align:center;width:100%}
+.drawer .menu{flex:1;overflow-y:auto;padding:10px;padding-bottom:18px;overscroll-behavior:contain;-webkit-overflow-scrolling:touch}
+.menu .group{margin:14px 10px 6px;color:var(--muted);font-size:11px;text-transform:uppercase;letter-spacing:.12em;font-weight:600;text-align:center}
+.menu .item{display:flex;align-items:center;gap:12px;padding:12px 14px;border-radius:14px;cursor:pointer;user-select:none;-webkit-tap-highlight-color:transparent;transition:background .18s,transform .06s}
+.menu .item:hover{background:var(--pill-bg)}
+.menu .item:active{transform:scale(.98)}
+.menu .item .ico{width:22px;height:22px;opacity:.9;flex-shrink:0;font-size:18px;text-align:center;line-height:22px}
+.menu .item .txt{font-weight:600;font-size:14px}
+.menu .item[data-active="true"]{background:#eee8f7;color:#312664}
+body.dark .menu .item[data-active="true"]{background:#eee8f7;color:#312664}
+body.dark .menu .item[data-active="true"] .txt,body.dark .menu .item[data-active="true"] .ico{color:#111827}
+
+/* Module views */
+.module-view{display:none;margin-top:16px;padding:0}
+.module-view.active{display:block}
+
+/* Back button (top-right of each module) */
+.module-topbar{display:flex;justify-content:flex-end;margin-bottom:-8px;position:relative;z-index:2}
+.back-btn{
+  width:36px;height:36px;border-radius:10px;border:1px solid var(--card-border);
+  background:var(--card);color:var(--muted);font-size:20px;line-height:1;
+  cursor:pointer;display:grid;place-items:center;transition:.15s;box-shadow:var(--shadow);
+}
+.back-btn:hover{background:var(--danger);color:#fff;border-color:var(--danger)}
+
+/* ══════════════════════════════════════════════
+   Responsive
+   ══════════════════════════════════════════════ */
+@media(max-width:960px){
+  .app{padding:12px}
+  .grid .field{grid-column:span 12!important}
+  .pillToggle{flex-wrap:wrap}.pillToggle button{flex:1 1 48%}
+}
+@media(max-width:640px){
+  body{font-size:14px}.card{padding:12px}
+  .field input,.field select{padding:12px}
+}
+
+/* Print */
+@media print{
+  .app-header,.drawer,.overlay,.footer,.copy-btn,.btn.reset,.center-actions,.rate-badge{display:none!important}
+  body{background:#fff!important;color:#000!important}
+  .card{box-shadow:none!important;border:1px solid #ddd}
+  .module-view{display:none!important}
+  .module-view.active{display:block!important}
+}
+
+/* ══════════════════════════════════════════════
+   Login Screen
+   ══════════════════════════════════════════════ */
+.login-screen{
+  position:fixed;inset:0;z-index:10000;
+  background:linear-gradient(135deg,#fff5f7 0%,#f0f4ff 100%);
+  display:flex;align-items:center;justify-content:center;
+  transition:opacity .4s ease,visibility .4s ease;
+}
+body.dark .login-screen{background:linear-gradient(135deg,#0f1115 0%,#151924 100%)}
+.login-screen.hidden{opacity:0;visibility:hidden;pointer-events:none}
+.login-box{
+  background:var(--card);border:1px solid var(--card-border);border-radius:24px;
+  box-shadow:0 20px 60px rgba(0,0,0,.08);padding:40px 32px;
+  width:min(90vw,380px);text-align:center;
+}
+body.dark .login-box{box-shadow:0 20px 60px rgba(0,0,0,.3)}
+.login-box .brand{font-size:32px;font-weight:800;margin-bottom:4px;color:#312664}
+body.dark .login-box .brand{color:#a78bfa}
+.login-box .subtitle{color:var(--muted);font-size:13px;margin-bottom:24px}
+.login-box input[type="password"]{
+  text-align:center;font-size:18px;letter-spacing:4px;padding:14px;
+  border-radius:14px;margin-bottom:12px;
+}
+.login-box .login-btn{
+  width:100%;padding:14px;font-size:16px;font-weight:700;border:none;border-radius:14px;
+  background:#312664;color:#fff;cursor:pointer;
+  transition:filter .15s,transform .06s;
+}
+.login-box .login-btn:hover{filter:brightness(1.05)}
+.login-box .login-btn:active{transform:scale(.98)}
+.login-box .login-error{color:var(--danger);font-size:13px;margin-top:10px;min-height:20px}
+.login-box .login-remember{display:flex;align-items:center;gap:6px;justify-content:center;margin:10px 0 0;font-size:12px;color:var(--muted)}
+</style>
+</head>
+<body>
+
+<!-- ═══ Login Screen ═══ -->
+<div class="login-screen" id="loginScreen">
+  <div class="login-box">
+    <div style="margin-bottom:12px"><img src="icons/logo.png" alt="BeeSublime" style="height:80px;border-radius:12px"></div>
+    <div class="subtitle">Ingresa la contraseña para acceder</div>
+    <form id="loginForm" autocomplete="off">
+      <input type="password" id="loginPass" placeholder="Contraseña" autofocus/>
+      <button type="submit" class="login-btn">Entrar</button>
+      <label class="login-remember">
+        <input type="checkbox" id="loginRemember" checked/> Recordar en este dispositivo
+      </label>
+      <div class="login-error" id="loginError"></div>
+    </form>
+  </div>
+</div>
+
+<div class="app" id="appContainer" style="display:none">
+
+<!-- ═══ Header ═══ -->
+<header class="app-header" id="appHeader">
+  <div style="display:flex;align-items:center;gap:10px">
+    <button class="burger" id="btnMenu" aria-label="Abrir menú">
+      <svg viewBox="0 0 24 24" width="24" height="24"><line x1="3" y1="7" x2="21" y2="7" stroke-width="2.2"/><line x1="3" y1="12" x2="21" y2="12" stroke-width="2.2"/><line x1="3" y1="17" x2="21" y2="17" stroke-width="2.2"/></svg>
+    </button>
+    <img src="icons/logo.png" alt="BeeSublime" style="height:36px;flex-shrink:0;border-radius:6px">
+  </div>
+  <div class="header-right">
+    <span class="rate-badge" id="rateBadge" title="Tasa BCV — Click para ver Divisas">$ --,--</span>
+    <button class="hdr-btn" id="themeToggle" title="Modo oscuro">🌙</button>
+  </div>
+</header>
+
+<!-- ═══ Overlay ═══ -->
+<div class="overlay" id="overlay"></div>
+
+<!-- ═══ Drawer ═══ -->
+<nav class="drawer" id="drawer">
+  <div class="drawer-header">
+    <div class="brand-dot"></div>
+    <span class="brand-name">BeeSublime</span>
+  </div>
+  <div class="menu" id="menu">
+    <div class="group">Inicio</div>
+    <div class="item" data-route="dashboard"><span class="ico">🏠</span><span class="txt">Dashboard</span></div>
+
+    <div class="group">Divisas</div>
+    <div class="item" data-route="divisas"><span class="ico">💱</span><span class="txt">Divisas BCV / Paralelo</span></div>
+
+    <div class="group">Calculadoras de Costos</div>
+    <div class="item" data-route="vinil"><span class="ico">🎨</span><span class="txt">Vinil</span></div>
+    <div class="item" data-route="sublimacion"><span class="ico">☕</span><span class="txt">Sublimación</span></div>
+    <div class="item" data-route="esferas"><span class="ico">🎄</span><span class="txt">Esferas Navideñas</span></div>
+    <div class="item" data-route="dtf"><span class="ico">👕</span><span class="txt">DTF (Terceros)</span></div>
+    <div class="item" data-route="papeleria"><span class="ico">📄</span><span class="txt">Papelería</span></div>
+    <div class="item" data-route="etiquetas"><span class="ico">🏷️</span><span class="txt">Etiquetas</span></div>
+    <div class="item" data-route="empaques"><span class="ico">📦</span><span class="txt">Empaques</span></div>
+    <div class="item" data-route="envios"><span class="ico">🚚</span><span class="txt">Envíos</span></div>
+    <div class="item" data-route="personalizado"><span class="ico">🛠️</span><span class="txt">Producto Personalizable</span></div>
+
+    <div class="group">Cotizador</div>
+    <div class="item" data-route="cotizador"><span class="ico">📋</span><span class="txt">Cotizar Productos</span></div>
+
+    <div class="group">Herramientas</div>
+    <div class="item" data-route="conversor"><span class="ico">📐</span><span class="txt">Conversor de Unidades</span></div>
+    <div class="item" data-route="basica"><span class="ico">🔢</span><span class="txt">Calculadora Básica</span></div>
+    <div class="item" data-route="resumen"><span class="ico">📊</span><span class="txt">Resumen General</span></div>
+
+    <div class="group">Info</div>
+    <div class="item" data-route="instrucciones"><span class="ico">📖</span><span class="txt">Instrucciones</span></div>
+  </div>
+</nav>
+
+<!-- ═══ Main Content ═══ -->
+<main id="mainContent">
+  <!-- Views are loaded here dynamically -->
+</main>
+
+</div><!-- /.app -->
+
+<!-- Toast -->
+<div class="toast" id="appToast"></div>
+
+<!-- Scripts -->
+<script src="app.js"></script>
+<script src="rates.js"></script>
+<script src="modules/dashboard.js"></script>
+<script src="modules/divisas.js"></script>
+<script src="modules/vinil.js"></script>
+<script src="modules/sublimacion.js"></script>
+<script src="modules/esferas.js"></script>
+<script src="modules/dtf.js"></script>
+<script src="modules/papeleria.js"></script>
+<script src="modules/etiquetas.js"></script>
+<script src="modules/empaques.js"></script>
+<script src="modules/envios.js"></script>
+<script src="modules/personalizado.js"></script>
+<script src="modules/cotizador.js"></script>
+<script src="modules/conversor.js"></script>
+<script src="modules/basica.js"></script>
+<script src="modules/resumen.js"></script>
+<script src="modules/instrucciones.js"></script>
+
+<!-- Login + SW -->
+<script>
+(function() {
+  // ── Login System ──
+  // Default password — change this to whatever you want
+  var LOGIN_PASS = 'beesublime';
+  var SESSION_KEY = 'bee.session';
+
+  function hashPass(p) {
+    // Simple hash for localStorage (not crypto-grade, just obfuscation)
+    var h = 0;
+    for (var i = 0; i < p.length; i++) { h = ((h << 5) - h) + p.charCodeAt(i); h |= 0; }
+    return 'bh_' + h;
+  }
+
+  var loginScreen = document.getElementById('loginScreen');
+  var appContainer = document.getElementById('appContainer');
+  var loginForm = document.getElementById('loginForm');
+  var loginPass = document.getElementById('loginPass');
+  var loginError = document.getElementById('loginError');
+  var loginRemember = document.getElementById('loginRemember');
+
+  // Check if already logged in
+  var stored = localStorage.getItem(SESSION_KEY);
+  if (stored === hashPass(LOGIN_PASS)) {
+    loginScreen.classList.add('hidden');
+    appContainer.style.display = '';
+  }
+
+  loginForm.addEventListener('submit', function(e) {
+    e.preventDefault();
+    var val = loginPass.value.trim();
+    if (val === LOGIN_PASS) {
+      if (loginRemember.checked) {
+        localStorage.setItem(SESSION_KEY, hashPass(LOGIN_PASS));
+      }
+      loginScreen.classList.add('hidden');
+      appContainer.style.display = '';
+      // Trigger route after app becomes visible
+      setTimeout(function() { window.dispatchEvent(new Event('hashchange')); }, 100);
+    } else {
+      loginError.textContent = 'Contraseña incorrecta';
+      loginPass.value = '';
+      loginPass.focus();
+    }
+  });
+
+  // ── Service Worker Registration ──
+  if ('serviceWorker' in navigator) {
+    navigator.serviceWorker.register('./sw.js').catch(function(e) {
+      console.log('SW registration failed:', e);
+    });
+  }
+})();
+</script>
+</body>
+</html>

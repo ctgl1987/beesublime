@@ -1,0 +1,14 @@
+{
+  "name": "BeeSublime",
+  "short_name": "BeeSublime",
+  "description": "Suite de herramientas para tu negocio",
+  "start_url": "./index.html",
+  "display": "standalone",
+  "orientation": "portrait",
+  "theme_color": "#312664",
+  "background_color": "#f7f7fb",
+  "icons": [
+    { "src": "icons/icon-192.png", "sizes": "192x192", "type": "image/png" },
+    { "src": "icons/icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "any maskable" }
+  ]
+}

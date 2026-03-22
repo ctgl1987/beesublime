@@ -76,6 +76,31 @@ input[type="number"],input[type="text"],select,textarea{
   transition:border-color .15s,box-shadow .15s}
 input:focus,select:focus,textarea:focus{outline:none;box-shadow:0 0 0 3px rgba(49,38,100,.2);border-color:#8b7abf}
 
+/* Money inputs — subtle pink tint so user knows they're POS-formatted */
+input[data-bee-cents]{background:#fffafc;border-color:#f0d6e8}
+input[data-bee-cents]:focus{background:#fff7fb;border-color:#8b7abf}
+body.dark input[data-bee-cents]{background:#1a1222;border-color:#3d2a4a}
+body.dark input[data-bee-cents]:focus{background:#1f1530;border-color:#8b7abf}
+
+/* Format hint that appears below focused money inputs */
+.bee-fmt-hint{
+  display:none;font-size:11px;color:var(--muted);
+  margin:3px 0 0 4px;opacity:.8;pointer-events:none;
+}
+input[data-bee-cents]:focus ~ .bee-fmt-hint,
+input[data-bee-cents]:focus + .bee-fmt-hint { display:block; }
+
+/* Read-only / calc output inputs stay pink */
+input.ud[data-bee-cents],input.ud{background:#ffe8ee!important;font-weight:600}
+body.dark input.ud{background:#5e3c49!important;color:#fff}
+
+/* Checkbox rows — highlight when checked */
+.dep-row input[type="checkbox"]:checked ~ *,
+tr:has(input[type="checkbox"]:checked) td { opacity: 1; }
+tr:has(input[type="checkbox"]:not(:checked)) td:not(:first-child) { opacity: .45; transition: opacity .15s; }
+tr:has(input[type="checkbox"]:checked) { background: #f9f5ff !important; }
+body.dark tr:has(input[type="checkbox"]:checked) { background: #1e1535 !important; }
+
 /* Buttons */
 .btn{appearance:none;border:none;border-radius:12px;padding:10px 14px;font-weight:600;cursor:pointer;font-family:inherit;font-size:14px;transition:filter .15s,transform .06s}
 .btn:hover{filter:brightness(1.05)}.btn:active{transform:scale(.98)}

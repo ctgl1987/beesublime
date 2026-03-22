@@ -19,7 +19,7 @@ function parseEU(s) {
 }
 function numVal(sel, root) {
   var el = typeof sel === 'string' ? qs(sel, root) : sel;
-  return el ? (parseFloat(el.value) || 0) : 0;
+  return el ? parseEU(el.value) : 0;
 }
 function showToast(msg, dur) {
   var t = qs('#appToast');
@@ -45,6 +45,107 @@ function load(key, fallback) {
   } catch(e) { return fallback !== undefined ? fallback : null; }
 }
 function removeKey(key) { localStorage.removeItem(STORE_PREFIX + key); }
+
+// ── Money Input Formatter (POS-style) ──
+// Typing digits auto-places the comma: 1→0,01 | 100→1,00 | 1050→10,50
+// Applied automatically to price/cost inputs based on ID heuristics.
+
+var _MONEY_ID_YES = ['precio','costo','monto','tarifa','sueldo','_ud','ud_','base','bcv','extra','empaque','flete','seguro','delivery','envio_m','alquiler','internet','electricidad','celular','gas','agua','comision','otros_m'];
+var _MONEY_ID_NO  = ['cant','qty','usos','uses','vida','hora','_mes','mes_','meses','unid','cols','km','merma','pct','porc','markup','margen','gg_pct','gi_pct','gp_pct','cantidad','setup','ejec','min_','ancho'];
+
+function _isBeeMoneyInput(el) {
+  if (!el || el.tagName !== 'INPUT') return false;
+  if (el.dataset.noMoney !== undefined) return false;
+  if (el.dataset.money !== undefined || el.classList.contains('bee-money')) return true;
+  var id = (el.id || '').toLowerCase();
+  for (var i = 0; i < _MONEY_ID_NO.length; i++)  { if (id.indexOf(_MONEY_ID_NO[i])  !== -1) return false; }
+  for (var i = 0; i < _MONEY_ID_YES.length; i++) { if (id.indexOf(_MONEY_ID_YES[i]) !== -1) return true;  }
+  // Fallback: check nearby label text
+  var lbl = el.closest('div,td')  && el.closest('div,td').querySelector('label');
+  if (lbl) {
+    var lt = lbl.textContent.toLowerCase();
+    if (lt.indexOf('($)') !== -1 || lt.indexOf('precio') !== -1 || lt.indexOf('costo') !== -1 ||
+        lt.indexOf('monto') !== -1 || lt.indexOf('tarifa') !== -1 || lt.indexOf('sueldo') !== -1 ||
+        lt.indexOf('dólar') !== -1 || lt.indexOf('bcv') !== -1) return true;
+  }
+  return false;
+}
+
+function _posFormat(cents) {
+  if (isNaN(cents) || cents < 0) cents = 0;
+  var s = String(Math.floor(cents)).padStart(3, '0');
+  return s.slice(0, -2) + ',' + s.slice(-2);
+}
+
+function _attachMoneyFmt(el) {
+  if (el._beeFmt) return;
+  el._beeFmt = true;
+  // Convert type=number → text so commas are allowed
+  if (el.type === 'number') {
+    var oldStep = el.step, oldMin = el.min, oldMax = el.max;
+    el.type = 'text';
+    el.inputMode = 'numeric';
+    el.autocomplete = 'off';
+    el.setAttribute('data-old-step', oldStep || '');
+  }
+  // Init from existing value
+  var existing = parseEU(el.value || '0');
+  el.dataset.beeCents = Math.round(existing * 100);
+  if (el.value !== '') el.value = _posFormat(el.dataset.beeCents);
+
+  el.addEventListener('keydown', function(e) {
+    if (e.key >= '0' && e.key <= '9') {
+      e.preventDefault();
+      var c = parseInt(el.dataset.beeCents || '0', 10) * 10 + parseInt(e.key, 10);
+      if (c > 999999999) return; // cap ~9.999.999,99
+      el.dataset.beeCents = c;
+      el.value = _posFormat(c);
+      el.dispatchEvent(new Event('input', { bubbles: true }));
+    } else if (e.key === 'Backspace') {
+      e.preventDefault();
+      var c = Math.floor(parseInt(el.dataset.beeCents || '0', 10) / 10);
+      el.dataset.beeCents = c;
+      el.value = _posFormat(c);
+      el.dispatchEvent(new Event('input', { bubbles: true }));
+    } else if (e.key === 'Delete' || e.key === 'Escape') {
+      e.preventDefault();
+      el.dataset.beeCents = 0;
+      el.value = _posFormat(0);
+      el.dispatchEvent(new Event('input', { bubbles: true }));
+    }
+    // Allow Tab, arrows, etc. to pass through
+  });
+
+  el.addEventListener('paste', function(e) {
+    e.preventDefault();
+    var pasted = (e.clipboardData || window.clipboardData).getData('text');
+    var num = parseEU(pasted.replace(/[^0-9,\.]/g, ''));
+    if (!isNaN(num) && num >= 0) {
+      var c = Math.round(num * 100);
+      el.dataset.beeCents = c;
+      el.value = _posFormat(c);
+      el.dispatchEvent(new Event('input', { bubbles: true }));
+    }
+  });
+
+  el.addEventListener('focus', function() { el.select && el.select(); });
+}
+
+function _scanMoneyInputs(root) {
+  var inputs = (root || document).querySelectorAll('input');
+  inputs.forEach(function(el) { if (_isBeeMoneyInput(el)) _attachMoneyFmt(el); });
+}
+
+// Watch dynamic module renders
+var _moneyObserver = new MutationObserver(function(mutations) {
+  mutations.forEach(function(m) {
+    m.addedNodes.forEach(function(node) {
+      if (node.nodeType !== 1) return;
+      _scanMoneyInputs(node);
+      if (node.tagName === 'INPUT' && _isBeeMoneyInput(node)) _attachMoneyFmt(node);
+    });
+  });
+});
 
 // ── Theme ──
 function initTheme() {
@@ -141,6 +242,7 @@ function initHeaderScroll() {
 document.addEventListener('DOMContentLoaded', function() {
   initTheme();
   initHeaderScroll();
+  _moneyObserver.observe(document.body, { childList: true, subtree: true });
 
   // Drawer events
   qs('#btnMenu').addEventListener('click', openDrawer);
@@ -172,4 +274,11 @@ function _startRouter() {
   var startRoute = window.location.hash.replace('#', '') || load('lastRoute', 'dashboard');
   if (!window.location.hash) window.location.hash = startRoute;
   else handleRoute();
+  // First-visit tip
+  if (!load('seenFmtTip')) {
+    setTimeout(function() {
+      showToast('💡 Escribe los dígitos — la coma se pone sola', 4000);
+      save('seenFmtTip', true);
+    }, 1200);
+  }
 }
